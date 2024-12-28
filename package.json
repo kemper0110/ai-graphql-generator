@@ -1,0 +1,31 @@
+{
+  "name": "graphql-generator",
+  "version": "1.0.0",
+  "type": "module",
+  "module": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@graphql-tools/mock": "9.0.12",
+    "@langchain/community": "0.3.20",
+    "@langchain/core": "0.3.26",
+    "@langchain/langgraph": "0.2.36",
+    "@langchain/ollama": "0.1.4",
+    "cheerio": "1.0.0",
+    "express": "4.21.2",
+    "graphql": "16.10.0",
+    "graphql-yoga": "5.10.8",
+    "langchain": "0.3.8",
+    "ruru": "2.0.0-beta.17",
+    "zod": "3.24.1"
+  },
+  "devDependencies": {
+    "@types/express": "5.0.0",
+    "typescript": "5.7.2"
+  }
+}

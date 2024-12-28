@@ -1,0 +1,1014 @@
+schema {
+    query: _Query
+    mutation: _Mutation
+}
+
+directive @strExpr(char: Char, chars: [Char!], string: String, strings: [String!], byte: Byte, bytes: [Byte!], short: Short, shorts: [Short!], int: Int, ints: [Int!], long: Long, longs: [Long!], float: _Float4, floats: [_Float4!], double: Float, doubles: [Float!], bigDecimal: BigDecimal, bigDecimals: [BigDecimal!], date: _Date, dates: [_Date!], dateTime: _DateTime, dateTimes: [_DateTime!], offsetDateTime: _OffsetDateTime, offsetDateTimes: [_OffsetDateTime!], time: _Time, times: [_Time!], boolean: Boolean, booleans: [Boolean!]) on FIELD
+
+directive @mergeReqSpec(cond: String) on INLINE_FRAGMENT
+
+directive @dependsOnByGet(commandId: String!, dependency: _DependsOnDependencyByGet!) on FIELD
+
+directive @dependsOnByUpdateOrCreate(commandId: String!, dependency: _DependsOnDependencyByUpdateOrCreate!) on FIELD
+
+"""Exposes a URL that specifies the behaviour of this scalar."""
+directive @specifiedBy(
+    """The URL that specifies the behaviour of this scalar."""
+    url: String!
+) on SCALAR
+
+"""Indicates an Input Object is a OneOf Input Object."""
+directive @oneOf on INPUT_OBJECT
+
+input _AddressInput {
+    city: String
+    flatNo: String
+    street: String
+}
+
+scalar _ByteArray
+
+type _Calculation {
+    char(expr: String!): Char
+    string(expr: String!): String
+    byte(expr: String!): Byte
+    short(expr: String!): Short
+    int(expr: String!): Int
+    long(expr: String!): Long
+    float(expr: String!): _Float4
+    double(expr: String!): Float
+    bigDecimal(expr: String!): BigDecimal
+    date(expr: String!): _Date
+    dateTime(expr: String!): _DateTime
+    offsetDateTime(expr: String!): _OffsetDateTime
+    time(expr: String!): _Time
+    boolean(expr: String!): Boolean
+    byteArray(expr: String!): _ByteArray
+}
+
+input _CompareClinicDoctorAvailabilityInput {
+    beginDate: _DateTime
+    endDate: _DateTime
+}
+
+input _CompareClinicDoctorTableInput {
+    comment: String
+    beginDate: _DateTime
+    endDate: _DateTime
+}
+
+input _CompareClinicInput {
+    name: String
+}
+
+input _CompareClinicOfficeInput {
+    officeNum: String
+}
+
+input _CompareCustomerInput {
+    insuranceNum: String
+}
+
+input _CompareDoctorTypeInput {
+    descr: String
+    name: String
+}
+
+input _ComparePersonInput {
+    birthDate: _Date
+    firstName: String
+    lastName: String
+    sex: _EN_Sex
+}
+
+input _CompareVipCustomerInput {
+    level: Int
+    insuranceNum: String
+}
+
+input _CreateClinicCustomerInput {
+    id: ID
+    clinic: ID!
+    customer: _SingleReferenceInput
+}
+
+input _CreateClinicDoctorAvailabilityInput {
+    id: ID
+    clinicDoctor: ID!
+    clinicOffice: ID!
+    beginDate: _DateTime!
+    endDate: _DateTime!
+}
+
+input _CreateClinicDoctorInput {
+    id: ID
+    clinic: ID!
+    doctor: _SingleReferenceInput
+}
+
+input _CreateClinicDoctorTableInput {
+    id: ID
+    clinicCustomer: ID!
+    clinicDoctorAvailability: ID!
+    comment: String
+    beginDate: _DateTime!
+    endDate: _DateTime!
+}
+
+input _CreateClinicInput {
+    id: ID
+    address: _AddressInput
+    name: String!
+}
+
+input _CreateClinicOfficeInput {
+    id: ID
+    clinic: ID!
+    officeNum: String!
+}
+
+input _CreateCustomerInput {
+    id: ID
+    insuranceNum: String!
+    person: _SingleReferenceInput
+}
+
+input _CreateDoctorInput {
+    id: ID
+    doctorType: ID!
+    person: _SingleReferenceInput
+}
+
+input _CreateDoctorTypeInput {
+    id: ID
+    descr: String
+    name: String!
+}
+
+input _CreatePersonInput {
+    id: ID
+    birthDate: _Date
+    firstName: String!
+    lastName: String!
+    sex: _EN_Sex!
+}
+
+input _CreateRootDictionaryInput {
+    id: ID
+}
+
+input _CreateVipCustomerInput {
+    id: ID
+    level: Int
+    insuranceNum: String!
+    person: _SingleReferenceInput
+}
+
+scalar _Date
+
+scalar _DateTime
+
+enum _DependsOnDependencyByGet {
+    EXISTS
+    NOT_EXISTS
+}
+
+enum _DependsOnDependencyByUpdateOrCreate {
+    CREATED
+    NOT_CREATED
+}
+
+type _DictionaryPacket {
+    getDoctorType(id: ID!, failOnEmpty: Boolean = null): DoctorType
+    updateOrCreateDoctorType(input: _CreateDoctorTypeInput!, exist: _ExistDoctorTypeInput): _UpdateOrCreateDoctorTypeResponse
+    deleteDoctorType(id: ID!, compare: _CompareDoctorTypeInput): String
+    getRootDictionary(id: ID!, failOnEmpty: Boolean = null): RootDictionary
+    deleteRootDictionary(id: ID!): String
+}
+
+type _E_Clinic implements _Entity & Clinic {
+    id: ID!
+    name: String!
+    sys_ver: Long
+    type: String!
+    clinicCustomerList(elemAlias: String, cond: String, limit: Int, offset: Int, sort: [_SortCriterionSpecification!]): _EC_ClinicCustomer!
+    clinicDoctorList(elemAlias: String, cond: String, limit: Int, offset: Int, sort: [_SortCriterionSpecification!]): _EC_ClinicDoctor!
+    clinicOfficeList(elemAlias: String, cond: String, limit: Int, offset: Int, sort: [_SortCriterionSpecification!]): _EC_ClinicOffice!
+    address: _G_Address!
+    _calc: _Calculation!
+}
+
+type _E_ClinicCustomer implements _Entity & ClinicCustomer {
+    id: ID!
+    type: String!
+    clinic(alias: String): Clinic!
+    aggregateRoot(alias: String): Clinic
+    clinicCustomerTableLost(elemAlias: String, cond: String, limit: Int, offset: Int, sort: [_SortCriterionSpecification!]): _EC_ClinicDoctorTable!
+    customer: _G_CustomerReference!
+    _calc: _Calculation!
+}
+
+type _E_ClinicDoctor implements _Entity & ClinicDoctor {
+    id: ID!
+    type: String!
+    clinic(alias: String): Clinic!
+    aggregateRoot(alias: String): Clinic
+    clinicDoctorAvailabilityList(elemAlias: String, cond: String, limit: Int, offset: Int, sort: [_SortCriterionSpecification!]): _EC_ClinicDoctorAvailability!
+    doctor: _G_DoctorReference!
+    _calc: _Calculation!
+}
+
+type _E_ClinicDoctorAvailability implements _Entity & ClinicDoctorAvailability {
+    id: ID!
+    beginDate: _DateTime!
+    endDate: _DateTime!
+    type: String!
+    clinicDoctor(alias: String): ClinicDoctor!
+    clinicOffice(alias: String): ClinicOffice!
+    aggregateRoot(alias: String): Clinic
+    clinicDoctorTableList(elemAlias: String, cond: String, limit: Int, offset: Int, sort: [_SortCriterionSpecification!]): _EC_ClinicDoctorTable!
+    _calc: _Calculation!
+}
+
+type _E_ClinicDoctorTable implements _Entity & ClinicDoctorTable {
+    id: ID!
+    beginDate: _DateTime!
+    endDate: _DateTime!
+    comment: String
+    type: String!
+    clinicCustomer(alias: String): ClinicCustomer!
+    clinicDoctorAvailability(alias: String): ClinicDoctorAvailability!
+    aggregateRoot(alias: String): Clinic
+    _calc: _Calculation!
+}
+
+type _E_ClinicOffice implements _Entity & ClinicOffice {
+    id: ID!
+    officeNum: String!
+    type: String!
+    clinic(alias: String): Clinic!
+    aggregateRoot(alias: String): Clinic
+    clinicOfficeAvailabilityList(elemAlias: String, cond: String, limit: Int, offset: Int, sort: [_SortCriterionSpecification!]): _EC_ClinicDoctorAvailability!
+    _calc: _Calculation!
+}
+
+type _E_Customer implements _Entity & Customer {
+    id: ID!
+    insuranceNum: String!
+    sys_ver: Long
+    type: String!
+    person: _G_PersonReference!
+    _calc: _Calculation!
+}
+
+type _E_Doctor implements _Entity & Doctor {
+    id: ID!
+    sys_ver: Long
+    type: String!
+    doctorType(alias: String): DoctorType!
+    person: _G_PersonReference!
+    _calc: _Calculation!
+}
+
+type _E_DoctorType implements _Entity & DoctorType {
+    id: ID!
+    descr: String
+    name: String!
+    sys_ver: Long
+    type: String!
+    aggregateRoot(alias: String): RootDictionary
+    _calc: _Calculation!
+}
+
+type _E_Person implements _Entity & Person {
+    id: ID!
+    birthDate: _Date
+    firstName: String!
+    lastName: String!
+    sex: _EN_Sex!
+    sys_ver: Long
+    type: String!
+    _calc: _Calculation!
+}
+
+type _E_RootDictionary implements _Entity & RootDictionary {
+    id: ID!
+    sys_ver: Long
+    type: String!
+    _calc: _Calculation!
+}
+
+type _E_VipCustomer implements _Entity & VipCustomer & Customer {
+    id: ID!
+    level: Int
+    insuranceNum: String!
+    sys_ver: Long
+    type: String!
+    person: _G_PersonReference!
+    _calc: _Calculation!
+}
+
+type _EC_Clinic {
+    elems: [Clinic!]!
+    count: Int!
+}
+
+type _EC_ClinicCustomer {
+    elems: [ClinicCustomer!]!
+    count: Int!
+}
+
+type _EC_ClinicDoctor {
+    elems: [ClinicDoctor!]!
+    count: Int!
+}
+
+type _EC_ClinicDoctorAvailability {
+    elems: [ClinicDoctorAvailability!]!
+    count: Int!
+}
+
+type _EC_ClinicDoctorTable {
+    elems: [ClinicDoctorTable!]!
+    count: Int!
+}
+
+type _EC_ClinicOffice {
+    elems: [ClinicOffice!]!
+    count: Int!
+}
+
+type _EC_Customer {
+    elems: [Customer!]!
+    count: Int!
+}
+
+type _EC_Doctor {
+    elems: [Doctor!]!
+    count: Int!
+}
+
+type _EC_DoctorType {
+    elems: [DoctorType!]!
+    count: Int!
+}
+
+type _EC_Person {
+    elems: [Person!]!
+    count: Int!
+}
+
+type _EC_RootDictionary {
+    elems: [RootDictionary!]!
+    count: Int!
+}
+
+type _EC_VipCustomer {
+    elems: [VipCustomer!]!
+    count: Int!
+}
+
+enum _EN_Sex {
+    M
+    W
+}
+
+type _ENC_Sex {
+    elems: [_EN_Sex!]!
+    count: Int!
+}
+
+interface _Entity {
+    id: ID!
+}
+
+input _ExistClinicCustomerInput {
+    update: _ExistUpdateClinicCustomerInput
+}
+
+input _ExistClinicDoctorAvailabilityInput {
+    update: _ExistUpdateClinicDoctorAvailabilityInput
+    compare: _CompareClinicDoctorAvailabilityInput
+}
+
+input _ExistClinicDoctorInput {
+    update: _ExistUpdateClinicDoctorInput
+}
+
+input _ExistClinicDoctorTableInput {
+    update: _ExistUpdateClinicDoctorTableInput
+    compare: _CompareClinicDoctorTableInput
+}
+
+input _ExistClinicInput {
+    update: _ExistUpdateClinicInput
+    compare: _CompareClinicInput
+}
+
+input _ExistClinicOfficeInput {
+    update: _ExistUpdateClinicOfficeInput
+    compare: _CompareClinicOfficeInput
+}
+
+input _ExistCustomerInput {
+    update: _ExistUpdateCustomerInput
+    compare: _CompareCustomerInput
+}
+
+input _ExistDoctorInput {
+    update: _ExistUpdateDoctorInput
+}
+
+input _ExistDoctorTypeInput {
+    update: _ExistUpdateDoctorTypeInput
+    compare: _CompareDoctorTypeInput
+}
+
+input _ExistPersonInput {
+    update: _ExistUpdatePersonInput
+    compare: _ComparePersonInput
+}
+
+input _ExistUpdateClinicCustomerInput {
+    clinic: ID!
+    customer: _SingleReferenceInput
+}
+
+input _ExistUpdateClinicDoctorAvailabilityInput {
+    clinicDoctor: ID!
+    clinicOffice: ID!
+    beginDate: _DateTime
+    endDate: _DateTime
+}
+
+input _ExistUpdateClinicDoctorInput {
+    clinic: ID!
+    doctor: _SingleReferenceInput
+}
+
+input _ExistUpdateClinicDoctorTableInput {
+    clinicCustomer: ID!
+    clinicDoctorAvailability: ID!
+    comment: String
+    beginDate: _DateTime
+    endDate: _DateTime
+}
+
+input _ExistUpdateClinicInput {
+    address: _AddressInput
+    name: String
+}
+
+input _ExistUpdateClinicOfficeInput {
+    clinic: ID!
+    officeNum: String
+}
+
+input _ExistUpdateCustomerInput {
+    insuranceNum: String
+    person: _SingleReferenceInput
+}
+
+input _ExistUpdateDoctorInput {
+    doctorType: ID!
+    person: _SingleReferenceInput
+}
+
+input _ExistUpdateDoctorTypeInput {
+    descr: String
+    name: String
+}
+
+input _ExistUpdatePersonInput {
+    birthDate: _Date
+    firstName: String
+    lastName: String
+    sex: _EN_Sex
+}
+
+input _ExistUpdateVipCustomerInput {
+    level: Int
+    insuranceNum: String
+    person: _SingleReferenceInput
+}
+
+input _ExistVipCustomerInput {
+    update: _ExistUpdateVipCustomerInput
+    compare: _CompareVipCustomerInput
+    inc: _IncVipCustomerInput
+}
+
+scalar _Float4
+
+type _G_Address {
+    city: String
+    flatNo: String
+    street: String
+}
+
+type _G_CustomerReference {
+    entityId: String
+    entity(alias: String): Customer
+}
+
+type _G_DoctorReference {
+    entityId: String
+    entity(alias: String): Doctor
+}
+
+type _G_PersonReference {
+    entityId: String
+    entity(alias: String): Person
+}
+
+input _IncBigDecimalValue {
+    value: BigDecimal!
+    negative: Boolean = null
+    fail: _IncBigDecimalValueFail
+}
+
+input _IncBigDecimalValueFail {
+    operation: _IncFailOperator!
+    value: BigDecimal!
+}
+
+input _IncDoubleValue {
+    value: Float!
+    negative: Boolean = null
+    fail: _IncDoubleValueFail
+}
+
+input _IncDoubleValueFail {
+    operation: _IncFailOperator!
+    value: Float!
+}
+
+enum _IncFailOperator {
+    lt
+    le
+    gt
+    ge
+}
+
+input _IncFloatValue {
+    value: _Float4!
+    negative: Boolean = null
+    fail: _IncFloatValueFail
+}
+
+input _IncFloatValueFail {
+    operation: _IncFailOperator!
+    value: _Float4!
+}
+
+input _IncIntValue {
+    value: Int!
+    negative: Boolean = null
+    fail: _IncIntValueFail
+}
+
+input _IncIntValueFail {
+    operation: _IncFailOperator!
+    value: Int!
+}
+
+input _IncLongValue {
+    value: Long!
+    negative: Boolean = null
+    fail: _IncLongValueFail
+}
+
+input _IncLongValueFail {
+    operation: _IncFailOperator!
+    value: Long!
+}
+
+input _IncVipCustomerInput {
+    level: _IncIntValue
+}
+
+type _MergedEntitiesCollection {
+    elems: [_Entity!]!
+    count: Int!
+}
+
+type _Mutation {
+    packet(idempotencePacketId: String): _Packet
+    dictionaryPacket: _DictionaryPacket
+}
+
+scalar _OffsetDateTime
+
+type _Packet {
+    createClinic(input: _CreateClinicInput!): Clinic
+    updateClinic(input: _UpdateClinicInput!, compare: _CompareClinicInput): Clinic
+    getClinic(id: ID!, failOnEmpty: Boolean = null): Clinic
+    updateOrCreateClinic(input: _CreateClinicInput!, exist: _ExistClinicInput): _UpdateOrCreateClinicResponse
+    deleteClinic(id: ID!, compare: _CompareClinicInput): String
+    createClinicCustomer(input: _CreateClinicCustomerInput!): ClinicCustomer
+    updateClinicCustomer(input: _UpdateClinicCustomerInput!): ClinicCustomer
+    getClinicCustomer(id: ID!, failOnEmpty: Boolean = null): ClinicCustomer
+    updateOrCreateClinicCustomer(input: _CreateClinicCustomerInput!, exist: _ExistClinicCustomerInput): _UpdateOrCreateClinicCustomerResponse
+    deleteClinicCustomer(id: ID!): String
+    createClinicDoctor(input: _CreateClinicDoctorInput!): ClinicDoctor
+    updateClinicDoctor(input: _UpdateClinicDoctorInput!): ClinicDoctor
+    getClinicDoctor(id: ID!, failOnEmpty: Boolean = null): ClinicDoctor
+    updateOrCreateClinicDoctor(input: _CreateClinicDoctorInput!, exist: _ExistClinicDoctorInput): _UpdateOrCreateClinicDoctorResponse
+    deleteClinicDoctor(id: ID!): String
+    createClinicDoctorAvailability(input: _CreateClinicDoctorAvailabilityInput!): ClinicDoctorAvailability
+    updateClinicDoctorAvailability(input: _UpdateClinicDoctorAvailabilityInput!, compare: _CompareClinicDoctorAvailabilityInput): ClinicDoctorAvailability
+    getClinicDoctorAvailability(id: ID!, failOnEmpty: Boolean = null): ClinicDoctorAvailability
+    updateOrCreateClinicDoctorAvailability(input: _CreateClinicDoctorAvailabilityInput!, exist: _ExistClinicDoctorAvailabilityInput): _UpdateOrCreateClinicDoctorAvailabilityResponse
+    deleteClinicDoctorAvailability(id: ID!, compare: _CompareClinicDoctorAvailabilityInput): String
+    createClinicDoctorTable(input: _CreateClinicDoctorTableInput!): ClinicDoctorTable
+    updateClinicDoctorTable(input: _UpdateClinicDoctorTableInput!, compare: _CompareClinicDoctorTableInput): ClinicDoctorTable
+    getClinicDoctorTable(id: ID!, failOnEmpty: Boolean = null): ClinicDoctorTable
+    updateOrCreateClinicDoctorTable(input: _CreateClinicDoctorTableInput!, exist: _ExistClinicDoctorTableInput): _UpdateOrCreateClinicDoctorTableResponse
+    deleteClinicDoctorTable(id: ID!, compare: _CompareClinicDoctorTableInput): String
+    createClinicOffice(input: _CreateClinicOfficeInput!): ClinicOffice
+    updateClinicOffice(input: _UpdateClinicOfficeInput!, compare: _CompareClinicOfficeInput): ClinicOffice
+    getClinicOffice(id: ID!, failOnEmpty: Boolean = null): ClinicOffice
+    updateOrCreateClinicOffice(input: _CreateClinicOfficeInput!, exist: _ExistClinicOfficeInput): _UpdateOrCreateClinicOfficeResponse
+    deleteClinicOffice(id: ID!, compare: _CompareClinicOfficeInput): String
+    createCustomer(input: _CreateCustomerInput!): Customer
+    updateCustomer(input: _UpdateCustomerInput!, compare: _CompareCustomerInput): Customer
+    getCustomer(id: ID!, failOnEmpty: Boolean = null): Customer
+    updateOrCreateCustomer(input: _CreateCustomerInput!, exist: _ExistCustomerInput): _UpdateOrCreateCustomerResponse
+    deleteCustomer(id: ID!, compare: _CompareCustomerInput): String
+    createVipCustomer(input: _CreateVipCustomerInput!): VipCustomer
+    updateVipCustomer(input: _UpdateVipCustomerInput!, compare: _CompareVipCustomerInput, inc: _IncVipCustomerInput): VipCustomer
+    getVipCustomer(id: ID!, failOnEmpty: Boolean = null): VipCustomer
+    updateOrCreateVipCustomer(input: _CreateVipCustomerInput!, exist: _ExistVipCustomerInput): _UpdateOrCreateVipCustomerResponse
+    deleteVipCustomer(id: ID!, compare: _CompareVipCustomerInput): String
+    createDoctor(input: _CreateDoctorInput!): Doctor
+    updateDoctor(input: _UpdateDoctorInput!): Doctor
+    getDoctor(id: ID!, failOnEmpty: Boolean = null): Doctor
+    updateOrCreateDoctor(input: _CreateDoctorInput!, exist: _ExistDoctorInput): _UpdateOrCreateDoctorResponse
+    deleteDoctor(id: ID!): String
+    createPerson(input: _CreatePersonInput!): Person
+    updatePerson(input: _UpdatePersonInput!, compare: _ComparePersonInput): Person
+    getPerson(id: ID!, failOnEmpty: Boolean = null): Person
+    updateOrCreatePerson(input: _CreatePersonInput!, exist: _ExistPersonInput): _UpdateOrCreatePersonResponse
+    deletePerson(id: ID!, compare: _ComparePersonInput): String
+    isIdempotenceResponse: Boolean
+}
+
+type _Query {
+    merge(limit: Int, offset: Int, sort: [_SortCriterionSpecification!]): _MergedEntitiesCollection!
+    resolveReferences(referenceType: String!, ids: [ID!]!): [_Reference!]!
+    searchClinic(cond: String, limit: Int, offset: Int, sort: [_SortCriterionSpecification!]): _EC_Clinic!
+    searchClinicCustomer(cond: String, limit: Int, offset: Int, sort: [_SortCriterionSpecification!]): _EC_ClinicCustomer!
+    searchClinicDoctor(cond: String, limit: Int, offset: Int, sort: [_SortCriterionSpecification!]): _EC_ClinicDoctor!
+    searchClinicOffice(cond: String, limit: Int, offset: Int, sort: [_SortCriterionSpecification!]): _EC_ClinicOffice!
+    searchClinicDoctorTable(cond: String, limit: Int, offset: Int, sort: [_SortCriterionSpecification!]): _EC_ClinicDoctorTable!
+    searchClinicDoctorAvailability(cond: String, limit: Int, offset: Int, sort: [_SortCriterionSpecification!]): _EC_ClinicDoctorAvailability!
+    searchCustomer(cond: String, limit: Int, offset: Int, sort: [_SortCriterionSpecification!]): _EC_Customer!
+    searchVipCustomer(cond: String, limit: Int, offset: Int, sort: [_SortCriterionSpecification!]): _EC_VipCustomer!
+    searchDoctor(cond: String, limit: Int, offset: Int, sort: [_SortCriterionSpecification!]): _EC_Doctor!
+    searchDoctorType(cond: String, limit: Int, offset: Int, sort: [_SortCriterionSpecification!]): _EC_DoctorType!
+    searchPerson(cond: String, limit: Int, offset: Int, sort: [_SortCriterionSpecification!]): _EC_Person!
+    searchRootDictionary(cond: String, limit: Int, offset: Int, sort: [_SortCriterionSpecification!]): _EC_RootDictionary!
+    strExpr(chars: [Char!], strings: [String!], bytes: [Byte!], shorts: [Short!], ints: [Int!], longs: [Long!], floats: [_Float4!], doubles: [Float!], bigDecimals: [BigDecimal!], dates: [_Date!], dateTimes: [_DateTime!], offsetDateTimes: [_OffsetDateTime!], times: [_Time!], booleans: [Boolean!]): String
+}
+
+type _R_Clinic implements _Reference {
+    entityId: String
+    entity: Clinic
+}
+
+type _R_ClinicCustomer implements _Reference {
+    entityId: String
+    entity: ClinicCustomer
+}
+
+type _R_ClinicDoctor implements _Reference {
+    entityId: String
+    entity: ClinicDoctor
+}
+
+type _R_ClinicDoctorAvailability implements _Reference {
+    entityId: String
+    entity: ClinicDoctorAvailability
+}
+
+type _R_ClinicDoctorTable implements _Reference {
+    entityId: String
+    entity: ClinicDoctorTable
+}
+
+type _R_ClinicOffice implements _Reference {
+    entityId: String
+    entity: ClinicOffice
+}
+
+type _R_Customer implements _Reference {
+    entityId: String
+    entity: Customer
+}
+
+type _R_Doctor implements _Reference {
+    entityId: String
+    entity: Doctor
+}
+
+type _R_DoctorType implements _Reference {
+    entityId: String
+    entity: DoctorType
+}
+
+type _R_Person implements _Reference {
+    entityId: String
+    entity: Person
+}
+
+type _R_RootDictionary implements _Reference {
+    entityId: String
+    entity: RootDictionary
+}
+
+type _R_VipCustomer implements _Reference {
+    entityId: String
+    entity: VipCustomer
+}
+
+interface _Reference {
+    entityId: String
+}
+
+input _SingleReferenceInput {
+    entityId: String!
+}
+
+input _SortCriterionSpecification {
+    crit: String!
+    order: _SortOrder! = ASC
+    nullsLast: Boolean
+}
+
+enum _SortOrder {
+    ASC
+    DESC
+}
+
+scalar _Time
+
+input _UpdateClinicCustomerInput {
+    id: ID!
+    clinic: ID!
+    customer: _SingleReferenceInput
+}
+
+input _UpdateClinicDoctorAvailabilityInput {
+    id: ID!
+    clinicDoctor: ID!
+    clinicOffice: ID!
+    beginDate: _DateTime
+    endDate: _DateTime
+}
+
+input _UpdateClinicDoctorInput {
+    id: ID!
+    clinic: ID!
+    doctor: _SingleReferenceInput
+}
+
+input _UpdateClinicDoctorTableInput {
+    id: ID!
+    clinicCustomer: ID!
+    clinicDoctorAvailability: ID!
+    comment: String
+    beginDate: _DateTime
+    endDate: _DateTime
+}
+
+input _UpdateClinicInput {
+    id: ID!
+    address: _AddressInput
+    name: String
+}
+
+input _UpdateClinicOfficeInput {
+    id: ID!
+    clinic: ID!
+    officeNum: String
+}
+
+input _UpdateCustomerInput {
+    id: ID!
+    insuranceNum: String
+    person: _SingleReferenceInput
+}
+
+input _UpdateDoctorInput {
+    id: ID!
+    doctorType: ID!
+    person: _SingleReferenceInput
+}
+
+type _UpdateOrCreateClinicCustomerResponse {
+    created: Boolean
+    returning: ClinicCustomer
+}
+
+type _UpdateOrCreateClinicDoctorAvailabilityResponse {
+    created: Boolean
+    returning: ClinicDoctorAvailability
+}
+
+type _UpdateOrCreateClinicDoctorResponse {
+    created: Boolean
+    returning: ClinicDoctor
+}
+
+type _UpdateOrCreateClinicDoctorTableResponse {
+    created: Boolean
+    returning: ClinicDoctorTable
+}
+
+type _UpdateOrCreateClinicOfficeResponse {
+    created: Boolean
+    returning: ClinicOffice
+}
+
+type _UpdateOrCreateClinicResponse {
+    created: Boolean
+    returning: Clinic
+}
+
+type _UpdateOrCreateCustomerResponse {
+    created: Boolean
+    returning: Customer
+}
+
+type _UpdateOrCreateDoctorResponse {
+    created: Boolean
+    returning: Doctor
+}
+
+type _UpdateOrCreateDoctorTypeResponse {
+    created: Boolean
+    returning: DoctorType
+}
+
+type _UpdateOrCreatePersonResponse {
+    created: Boolean
+    returning: Person
+}
+
+type _UpdateOrCreateVipCustomerResponse {
+    created: Boolean
+    returning: VipCustomer
+}
+
+input _UpdatePersonInput {
+    id: ID!
+    birthDate: _Date
+    firstName: String
+    lastName: String
+    sex: _EN_Sex
+}
+
+input _UpdateVipCustomerInput {
+    id: ID!
+    level: Int
+    insuranceNum: String
+    person: _SingleReferenceInput
+}
+
+"""An arbitrary precision signed decimal"""
+scalar BigDecimal
+
+"""An 8-bit signed integer"""
+scalar Byte
+
+"""A UTF-16 code unit; a character on Unicode's BMP"""
+scalar Char
+
+interface Clinic {
+    id: ID!
+    name: String!
+    sys_ver: Long
+    type: String!
+    clinicCustomerList(elemAlias: String, cond: String, limit: Int, offset: Int, sort: [_SortCriterionSpecification!]): _EC_ClinicCustomer!
+    clinicDoctorList(elemAlias: String, cond: String, limit: Int, offset: Int, sort: [_SortCriterionSpecification!]): _EC_ClinicDoctor!
+    clinicOfficeList(elemAlias: String, cond: String, limit: Int, offset: Int, sort: [_SortCriterionSpecification!]): _EC_ClinicOffice!
+    address: _G_Address!
+    _calc: _Calculation!
+}
+
+interface ClinicCustomer {
+    id: ID!
+    type: String!
+    clinic(alias: String): Clinic!
+    aggregateRoot(alias: String): Clinic
+    clinicCustomerTableLost(elemAlias: String, cond: String, limit: Int, offset: Int, sort: [_SortCriterionSpecification!]): _EC_ClinicDoctorTable!
+    customer: _G_CustomerReference!
+    _calc: _Calculation!
+}
+
+interface ClinicDoctor {
+    id: ID!
+    type: String!
+    clinic(alias: String): Clinic!
+    aggregateRoot(alias: String): Clinic
+    clinicDoctorAvailabilityList(elemAlias: String, cond: String, limit: Int, offset: Int, sort: [_SortCriterionSpecification!]): _EC_ClinicDoctorAvailability!
+    doctor: _G_DoctorReference!
+    _calc: _Calculation!
+}
+
+interface ClinicDoctorAvailability {
+    id: ID!
+    beginDate: _DateTime!
+    endDate: _DateTime!
+    type: String!
+    clinicDoctor(alias: String): ClinicDoctor!
+    clinicOffice(alias: String): ClinicOffice!
+    aggregateRoot(alias: String): Clinic
+    clinicDoctorTableList(elemAlias: String, cond: String, limit: Int, offset: Int, sort: [_SortCriterionSpecification!]): _EC_ClinicDoctorTable!
+    _calc: _Calculation!
+}
+
+interface ClinicDoctorTable {
+    id: ID!
+    beginDate: _DateTime!
+    endDate: _DateTime!
+    comment: String
+    type: String!
+    clinicCustomer(alias: String): ClinicCustomer!
+    clinicDoctorAvailability(alias: String): ClinicDoctorAvailability!
+    aggregateRoot(alias: String): Clinic
+    _calc: _Calculation!
+}
+
+interface ClinicOffice {
+    id: ID!
+    officeNum: String!
+    type: String!
+    clinic(alias: String): Clinic!
+    aggregateRoot(alias: String): Clinic
+    clinicOfficeAvailabilityList(elemAlias: String, cond: String, limit: Int, offset: Int, sort: [_SortCriterionSpecification!]): _EC_ClinicDoctorAvailability!
+    _calc: _Calculation!
+}
+
+interface Customer {
+    id: ID!
+    insuranceNum: String!
+    sys_ver: Long
+    type: String!
+    person: _G_PersonReference!
+    _calc: _Calculation!
+}
+
+interface Doctor {
+    id: ID!
+    sys_ver: Long
+    type: String!
+    doctorType(alias: String): DoctorType!
+    person: _G_PersonReference!
+    _calc: _Calculation!
+}
+
+interface DoctorType {
+    id: ID!
+    descr: String
+    name: String!
+    sys_ver: Long
+    type: String!
+    aggregateRoot(alias: String): RootDictionary
+    _calc: _Calculation!
+}
+
+"""A 64-bit signed integer"""
+scalar Long
+
+interface Person {
+    id: ID!
+    birthDate: _Date
+    firstName: String!
+    lastName: String!
+    sex: _EN_Sex!
+    sys_ver: Long
+    type: String!
+    _calc: _Calculation!
+}
+
+interface RootDictionary {
+    id: ID!
+    sys_ver: Long
+    type: String!
+    _calc: _Calculation!
+}
+
+"""A 16-bit signed integer"""
+scalar Short
+
+interface VipCustomer {
+    id: ID!
+    level: Int
+    insuranceNum: String!
+    sys_ver: Long
+    type: String!
+    person: _G_PersonReference!
+    _calc: _Calculation!
+}
+

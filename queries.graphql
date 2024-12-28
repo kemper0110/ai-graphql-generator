@@ -1,0 +1,41 @@
+{
+    searchClinic {
+        elems {
+            id name
+            address {
+                city
+                flatNo
+                street
+            }
+            clinicDoctorList {
+                elems {
+                    doctor {
+                        entity{
+                            id
+                            person {
+                                entity {
+                                    firstName birthDate
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            clinicCustomerList {
+                elems {
+                    id name
+                    clinicId
+                    clinic {
+                        id name
+                        clinicCustomerList {
+                            elems {
+                                id name
+                                clinicId
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
