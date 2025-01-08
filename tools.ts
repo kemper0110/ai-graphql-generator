@@ -1,6 +1,6 @@
 import {tool} from "@langchain/core/tools";
 import {z} from "zod";
-import {buildSchema, parse, print, validate} from "graphql";
+import {buildSchema, GraphQLError, parse, print, validate} from "graphql";
 import fs from "node:fs";
 
 const schema = buildSchema(fs.readFileSync("schema.graphql", 'utf-8'))
@@ -98,7 +98,12 @@ export const validQueryResponse = "Query is valid"
 
 const validateQuery = tool(function validateQuery({query}: { query: string }) {
     console.log('called validateQueryTool', query)
-    const queryAst = parse(query)
+    let queryAst;
+    try {
+        queryAst = parse(query)
+    } catch (e: GraphQLError) {
+        return e.toJSON()
+    }
     const errors = validate(schema, queryAst)
     if (errors.length) {
         return errors.map(e => e.toJSON()).join('\n')
@@ -120,4 +125,4 @@ const validateQuery = tool(function validateQuery({query}: { query: string }) {
     }
 );
 
-export const tools = [getRootTypesTool, getTypeTool, getPossibleTypesTool, getDirectiveTool, getDirectivesTool, getTypesTool, getImplementationsTool];
+export const tools = [getRootTypesTool, getTypeTool, getPossibleTypesTool, getDirectiveTool, getDirectivesTool, getTypesTool, getImplementationsTool, validateQuery];

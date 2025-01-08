@@ -12,6 +12,8 @@
   "description": "",
   "dependencies": {
     "@graphql-tools/mock": "9.0.12",
+    "@graphql-tools/schema": "^10.0.14",
+    "@graphql-tools/wrap": "^10.0.27",
     "@langchain/community": "0.3.20",
     "@langchain/core": "0.3.26",
     "@langchain/langgraph": "0.2.36",
